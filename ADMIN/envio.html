@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>VAIJÁ • Nova Entrega</title>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    .scrollbar-none::-webkit-scrollbar{display:none}
+    .scrollbar-none{scrollbar-width:none}
+    #destination-input{flex:1;background:transparent;outline:none;font-size:15px;color:#111827}
+    #destination-input::placeholder{color:#6b7280}
+    .pac-container{z-index:99999!important;border-radius:14px;overflow:hidden;border:1px solid #e5e7eb;box-shadow:0 10px 24px rgba(0,0,0,.08)}
+    .user-dot{width:14px;height:14px;border-radius:9999px;background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.35);position:relative}
+    .user-dot::after{content:"";position:absolute;inset:-6px;border-radius:9999px;border:2px solid rgba(239,68,68,.35);animation:pulse 1.6s ease-out infinite}
+    @keyframes pulse{0%{transform:scale(0.9);opacity:0.9}70%{transform:scale(1.5);opacity:0}100%{transform:scale(1.5);opacity:0}}
+    .locate-btn{position:absolute;right:12px;bottom:12px;z-index:50;width:40px;height:40px;border-radius:9999px;background:#fff;border:1px solid #e5e7eb;box-shadow:0 4px 12px rgba(0,0,0,.08);display:flex;align-items:center;justify-content:center}
+    .locate-btn:hover{background:#f9fafb}
+    .pay-btn{transition:all .15s ease}
+    .pay-btn.active{background:#000;color:#fff;border-color:#000}
+    .pay-btn:not(.active){background:#fff;color:#111827;border-color:#e5e7eb}
+    #bg-video{pointer-events:none}
+  </style>
+</head>
+<body class="bg-transparent text-gray-900 min-h-[100svh] selection:bg-black selection:text-white" style="background:transparent">
+
+  <!-- Fundo em vídeo -->
+  <div class="fixed inset-0 z-0">
+    <video id="bg-video" class="w-full h-full object-cover" autoplay muted loop playsinline webkit-playsinline preload="auto" poster="../RECURSOS/envio.png">
+      <source src="../RECURSOS/envio.mp4" type="video/mp4" />
+    </video>
+  </div>
+  <div class="fixed inset-0 z-[1] bg-white/10"></div>
+
+  <!-- App Bar -->
+  <header class="sticky top-0 z-10 bg-white/95 backdrop-blur border-b border-gray-100">
+    <div class="max-w-lg md:max-w-2xl lg:max-w-5xl xl:max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <button class="h-9 w-9 rounded-full bg-gray-100 flex items-center justify-center">
+        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+      </button>
+
+      <img src="../RECURSOS/logo.png" alt="Logo VAIJÁ" class="h-16 w-auto"
+           onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span class=\'font-bold text-lg\'>VAIJÁ</span>');">
+
+      <button class="h-9 w-9 rounded-full bg-gray-100 flex items-center justify-center">
+        <i data-lucide="help-circle" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="relative z-10 max-w-lg md:max-w-2xl lg:max-w-5xl xl:max-w-6xl mx-auto">
+    <!-- Busca -->
+    <section class="px-4 mt-3">
+      <div class="flex gap-2 relative">
+        <div class="flex-1 bg-gray-100 rounded-full pl-4 pr-3 py-3 flex items-center gap-3">
+          <i data-lucide="search" class="w-5 h-5 text-gray-500"></i>
+          <input id="destination-input" placeholder="Para onde vamos?" autocomplete="off"/>
+        </div>
+      </div>
+      <div id="precisao" class="px-1 text-xs text-gray-700 mt-2 hidden">
+        Arraste o marcador para ajustar o ponto exato. <span id="coords"></span>
+      </div>
+    </section>
+
+    <!-- Mapa -->
+    <section class="px-4 mt-4 mb-10 md:mb-14 lg:mb-16">
+      <div class="relative rounded-3xl overflow-hidden border border-gray-200">
+        <div id="map" class="h-64 md:h-80 lg:h-96 xl:h-[520px] w-full bg-gray-200 flex items-center justify-center text-gray-500">
+          Carregando mapa...
+        </div>
+        <button id="btn-locate" class="locate-btn" title="Minha localização" aria-label="Minha localização">
+          <i data-lucide="target" class="w-5 h-5 text-gray-700"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- Card de opção -->
+    <section class="px-4 mt-8 md:mt-10 pb-32">
+      <div class="mt-3 space-y-3">
+        <label class="group block rounded-2xl border border-gray-200 p-4 bg-white shadow-md ring-2 ring-transparent group-hover:ring-black"
+               id="option-card">
+          <div class="flex items-center gap-3 text-gray-900">
+            <div class="h-12 w-12 rounded-xl bg-gray-100 flex items-center justify-center">
+              <i data-lucide="zap" class="w-6 h-6"></i>
+            </div>
+            <div class="flex-1">
+              <div class="font-semibold">Rápido Premium <span id="km-info" class="text-gray-500 font-normal ml-1"></span></div>
+              <div class="text-sm text-gray-600" id="fare-sub">Aguardando destino...</div>
+            </div>
+            <div class="text-right">
+              <div id="price" class="font-bold">R$ 0,00</div>
+              <input type="radio" name="modalidade" class="sr-only" checked />
+              <div class="mt-1 text-xs text-gray-500">Exclusivo</div>
+            </div>
+          </div>
+        </label>
+      </div>
+    </section>
+  </main>
+
+  <!-- Barra inferior -->
+  <div class="fixed bottom-0 inset-x-0 z-10 bg-white/95 backdrop-blur border-t border-gray-200">
+    <div class="max-w-lg md:max-w-2xl lg:max-w-5xl xl:max-w-6xl mx-auto p-4">
+      <div class="flex items-center justify-between gap-2">
+        <div class="text-sm text-gray-700">Pagamento</div>
+        <div class="flex gap-2">
+          <button id="pay-pix"  class="pay-btn active rounded-full border px-4 py-2 text-sm font-semibold">
+            <i data-lucide="qr-code" class="inline w-4 h-4 mr-1"></i> PIX
+          </button>
+          <!-- 🔹 Botão de teste/grátis -->
+          <button id="pay-free" class="pay-btn rounded-full border px-4 py-2 text-sm font-semibold">
+            <i data-lucide="badge-check" class="inline w-4 h-4 mr-1"></i> Grátis (teste)
+          </button>
+          <button id="pay-card" class="pay-btn rounded-full border px-4 py-2 text-sm font-semibold">
+            <i data-lucide="credit-card" class="inline w-4 h-4 mr-1"></i> Cartão
+          </button>
+        </div>
+      </div>
+
+      <button id="waze-btn" class="w-full mt-3 bg-cyan-500 text-white font-bold py-3 rounded-2xl shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 hover:bg-cyan-600 transition-colors hidden">
+        <i data-lucide="navigation" class="w-5 h-5"></i> Navegar com Waze
+      </button>
+
+      <button id="request-btn" class="w-full mt-3 bg-black text-white font-bold py-3 rounded-2xl shadow-lg shadow-black/10 hover:bg-gray-800 transition-colors opacity-50" disabled>
+        Pedir entrega
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Deslizante -->
+  <div id="modal-overlay" class="fixed inset-0 bg-black/50 z-[60] opacity-0 hidden transition-opacity duration-300 ease-in-out"></div>
+  <div id="modal-panel" class="fixed bottom-0 inset-x-0 z-[70] bg-white rounded-t-3xl shadow-2xl h-[60vh] transform translate-y-full transition-transform duration-300 ease-in-out">
+    <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+      <h3 id="modal-title" class="text-lg font-bold">Pagamento</h3>
+      <button id="close-modal-btn" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <div id="modal-content" class="p-4 overflow-y-auto h-[calc(60vh-65px)] scrollbar-none"></div>
+  </div>
+
+  <!-- Lógica -->
+  <script>
+    lucide.createIcons();
+
+    // ======== CONFIG API ========
+    const API = "http://127.0.0.1:8787"; // ajuste em produção para sua URL do Worker
+
+    // Garantir autoplay do vídeo
+    document.addEventListener('DOMContentLoaded', () => {
+      const v = document.getElementById('bg-video');
+      if (!v) return;
+      v.muted = true; v.loop = true; v.playsInline = true;
+      const tryPlay = () => v.play().catch(() => setTimeout(tryPlay, 400));
+      tryPlay();
+    });
+
+    let map, directionsService, directionsRenderer, originLL, destLL;
+    let destMarker, userDotMarker, geocoder, autocomplete, watchId;
+    const PRECO_POR_KM = 3.00;
+    const VALOR_MINIMO = 9.00;
+    let paymentMethod = 'pix';
+    let ultimoLeg = null; // guarda a última rota calculada
+
+    // modal
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalPanel   = document.getElementById('modal-panel');
+    const modalTitle   = document.getElementById('modal-title');
+    const modalContent = document.getElementById('modal-content');
+
+    async function openModal(url, title){
+      try{
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const html = await res.text();
+        modalTitle.textContent = title;
+        modalContent.innerHTML = html;
+      }catch(e){
+        modalTitle.textContent = 'Erro';
+        modalContent.innerHTML = `
+          <div class="text-center text-red-600">
+            <p class="font-semibold">Não foi possível carregar o conteúdo.</p>
+            <p class="text-sm mt-1">Verifique se o arquivo existe: <code>${url}</code></p>
+          </div>`;
+      }
+      modalOverlay.classList.remove('hidden'); requestAnimationFrame(()=>modalOverlay.classList.remove('opacity-0'));
+      modalPanel.classList.remove('translate-y-full');
+      lucide.createIcons();
+    }
+    function closeModal(){
+      modalOverlay.classList.add('opacity-0');
+      modalPanel.classList.add('translate-y-full');
+      setTimeout(()=>{ modalOverlay.classList.add('hidden'); modalContent.innerHTML=''; }, 250);
+    }
+    document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', closeModal);
+
+    // pagamento
+    const requestBtn = document.getElementById('request-btn');
+    const pixBtn  = document.getElementById('pay-pix');
+    const freeBtn = document.getElementById('pay-free');
+    const cardBtn = document.getElementById('pay-card');
+
+    function activatePay(btn, method){
+      [pixBtn, cardBtn, freeBtn].forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      paymentMethod = method;
+      requestBtn.textContent = (method === 'free') ? 'Pedir entrega (GRÁTIS - teste)' : 'Pedir entrega';
+    }
+    pixBtn.addEventListener('click',  ()=>activatePay(pixBtn,'pix'));
+    freeBtn.addEventListener('click', ()=>activatePay(freeBtn,'free'));
+    cardBtn.addEventListener('click', ()=>activatePay(cardBtn,'card'));
+
+    // ======== CRIAR ENTREGA (GRÁTIS) E REDIRECIONAR ========
+    document.getElementById('request-btn').addEventListener('click', async () => {
+      if (!originLL || !destLL) { alert('Defina sua localização e o destino para continuar.'); return; }
+
+      // calcula dados para o payload
+      // distancia (km) e valor vieram do último Directions leg
+      const km = ultimoLeg ? (ultimoLeg.distance?.value || 0) / 1000 : 0;
+      const estimado = km * PRECO_POR_KM;
+      const total = Math.max(estimado, VALOR_MINIMO);
+
+      if (paymentMethod === 'free') {
+        try {
+          const payload = {
+            origem:  { lat: originLL.lat, lng: originLL.lng, endereco: null }, // se quiser, podemos fazer reverse geocode
+            destino: { lat: destLL.lat, lng: destLL.lng, endereco: document.getElementById('destination-input').value || null },
+            distancia_km: Number(km.toFixed(2)),
+            valor: Number(total.toFixed(2)),
+            pagamento_metodo: "free",
+            cliente: { nome: null, fone: null }
+          };
+
+          const r = await fetch(`${API}/criar-entrega`, {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          const data = await r.json();
+          if (!r.ok || !data?.ok) throw new Error(data?.error || "Falha ao criar entrega");
+
+          // redireciona para a tela de esperando motorista
+          location.href = `entregas.html?id=${encodeURIComponent(data.id)}`;
+        } catch (e) {
+          console.error(e);
+          alert('Falha ao criar pedido de teste.');
+        }
+        return;
+      }
+
+      // fluxo normal de pagamento (PIX/CARTÃO) → depois de aprovado, chamar /criar-entrega e redirecionar
+      if (paymentMethod === 'pix')  openModal('./pagamento-pix.html','Pagamento com PIX');
+      if (paymentMethod === 'card') openModal('./pagamento-cartao.html','Pagamento com Cartão');
+    });
+
+    // MAPS
+    window.initMap = async function() {
+      const { Map } = await google.maps.importLibrary("maps");
+      const { DirectionsService, DirectionsRenderer } = await google.maps.importLibrary("routes");
+      geocoder = new google.maps.Geocoder();
+
+      directionsService = new DirectionsService();
+      directionsRenderer = new DirectionsRenderer({
+        suppressMarkers: true,
+        polylineOptions: { strokeColor: '#000', strokeWeight: 5 }
+      });
+
+      const goianiaCenter = { lat: -16.6869, lng: -49.2648 };
+      map = new Map(document.getElementById("map"), {
+        zoom: 14,
+        center: goianiaCenter,
+        disableDefaultUI: true
+      });
+      directionsRenderer.setMap(map);
+
+      // Autocomplete
+      const input = document.getElementById('destination-input');
+      const options = {
+        fields: ["place_id", "geometry", "formatted_address", "name"],
+        types: ["geocode"],
+        componentRestrictions: { country: "br" }
+      };
+      autocomplete = new google.maps.places.Autocomplete(input, options);
+      const goianiaBounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(-16.95, -49.45),
+        new google.maps.LatLng(-16.45, -49.00)
+      );
+      autocomplete.setBounds(goianiaBounds);
+      autocomplete.setOptions({ strictBounds: false });
+
+      autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+        if (!place.geometry || !place.geometry.location) return;
+        setDestination(place.geometry.location, place.formatted_address || place.name);
+      });
+
+      // Clique no mapa define destino
+      map.addListener("click", (e) => setDestination(e.latLng, null, true));
+
+      // Botão "minha localização"
+      document.getElementById('btn-locate').addEventListener('click', () => {
+        goToMyLocation(true);
+      });
+
+      // Localização do usuário — bolinha vermelha + watch
+      startUserLocationWatch(goianiaBounds);
+    };
+
+    function startUserLocationWatch(boundsBias){
+      if (!navigator.geolocation) return;
+
+      navigator.geolocation.getCurrentPosition((pos)=>{
+        const center = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        map.setCenter(center);
+        addOrMoveUserDot(center);
+        originLL = center;
+
+        const circle = new google.maps.Circle({ center, radius: pos.coords.accuracy || 2000 });
+        autocomplete.setBounds(circle.getBounds() || boundsBias);
+      });
+
+      watchId = navigator.geolocation.watchPosition(
+        (pos)=>{
+          originLL = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          addOrMoveUserDot(originLL);
+          if (destLL) traceRoute();
+        },
+        (err)=>{ console.warn("watchPosition erro:", err?.message); },
+        { enableHighAccuracy:true, maximumAge: 1000, timeout: 10000 }
+      );
+    }
+
+    function goToMyLocation(setAsOrigin=false){
+      if (!navigator.geolocation) return;
+      navigator.geolocation.getCurrentPosition((pos)=>{
+        const ll = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        map.panTo(ll); map.setZoom(16);
+        addOrMoveUserDot(ll);
+        if (setAsOrigin) { originLL = ll; if (destLL) traceRoute(); }
+      }, (err)=>console.warn("getCurrentPosition erro:", err?.message), { enableHighAccuracy:true, timeout:8000 });
+    }
+
+    async function addOrMoveUserDot(position){
+      const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+      if (!userDotMarker) {
+        const dot = document.createElement('div');
+        dot.className = 'user-dot';
+        userDotMarker = new AdvancedMarkerElement({
+          position, map, title: "Minha localização", content: dot, zIndex: 9999
+        });
+      } else {
+        userDotMarker.position = position;
+      }
+    }
+
+    async function setDestination(latLng, formattedAddress=null, fromClick=false){
+      destLL = { lat: latLng.lat(), lng: latLng.lng() };
+      const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+      if (!destMarker) {
+        const img = document.createElement('img');
+        img.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='black' stroke='white' stroke-width='1'><path d='M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z'/></svg>";
+        img.width = 48; img.height = 48;
+
+        destMarker = new AdvancedMarkerElement({
+          position: latLng, map, title: "Entrega", gmpDraggable: true, content: img
+        });
+
+        destMarker.addListener("dragend", async (ev) => {
+          destLL = { lat: ev.latLng.lat(), lng: ev.latLng.lng() };
+          await updateAddressFromCoords();
+          updatePrecisionUI();
+          traceRoute();
+        });
+      } else {
+        destMarker.position = latLng;
+      }
+
+      map.panTo(latLng); map.setZoom(16);
+
+      if (fromClick || !formattedAddress) {
+        await updateAddressFromCoords();
+      } else {
+        document.getElementById('destination-input').value = formattedAddress;
+      }
+
+      updatePrecisionUI();
+      traceRoute();
+    }
+
+    async function updateAddressFromCoords(){
+      try{
+        const { results } = await geocoder.geocode({ location: destLL });
+        if (results && results[0]) {
+          document.getElementById('destination-input').value = results[0].formatted_address;
+        }
+      }catch(e){ console.warn("Reverse geocode falhou:", e); }
+    }
+
+    function updatePrecisionUI(){
+      const prec = document.getElementById('precisao');
+      const coords = document.getElementById('coords');
+      coords.textContent = `(${destLL.lat.toFixed(5)}, ${destLL.lng.toFixed(5)})`;
+      prec.classList.remove('hidden');
+      document.getElementById('waze-btn').classList.remove('hidden');
+    }
+
+    async function traceRoute() {
+      if(!originLL || !destLL) return;
+      const resp = await directionsService.route({
+        origin: originLL,
+        destination: destLL,
+        travelMode: google.maps.TravelMode.DRIVING
+      });
+      directionsRenderer.setDirections(resp);
+      const leg = resp.routes[0].legs[0];
+      ultimoLeg = leg;
+
+      const km = (leg.distance?.value || 0) / 1000;
+      const estimado = km * PRECO_POR_KM;
+      const total = Math.max(estimado, VALOR_MINIMO);
+
+      document.getElementById('km-info').textContent = `(${km.toFixed(1)} km)`;
+      document.getElementById('price').textContent = total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+      document.getElementById('fare-sub').textContent = (total === VALOR_MINIMO && estimado < VALOR_MINIMO)
+        ? 'Tarifa mínima aplicada' : 'Valor estimado da entrega';
+
+      requestBtn.disabled = false;
+      requestBtn.classList.remove('opacity-50');
+      document.getElementById('option-card').classList.add('ring-black');
+    }
+  </script>
+
+  <!-- Google Maps API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiUY7vPjFO_c7ltCI14TFe5pIcu3YSh10&v=weekly&loading=async&libraries=places,routes,marker&callback=initMap" async defer></script>
+</body>
+</html>

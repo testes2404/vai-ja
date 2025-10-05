@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- META: mantenha estas duas como as 1ªs linhas do <head> -->
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAIJÁ - Entregas Rápidas para o seu Negócio</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-white text-gray-700">
+
+  <header class="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-200">
+    <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="#">
+        <img src="RECURSOS/logo.png" alt="Logo VAIJÁ" class="h-32 w-auto" />
+      </a>
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="#vantagens" class="text-gray-600 hover:text-black transition duration-300">Vantagens</a>
+        <a href="#solucoes" class="text-gray-600 hover:text-black transition duration-300">Soluções</a>
+        <a href="#faq" class="text-gray-600 hover:text-black transition duration-300">FAQ</a>
+        <a href="#contato" class="bg-black hover:bg-gray-800 text-white font-bold py-2 px-6 rounded-full transition duration-300">Contato</a>
+      </div>
+      <button id="mobile-menu-button" class="md:hidden text-black">
+        <i data-lucide="menu"></i>
+      </button>
+    </nav>
+    <div id="mobile-menu" class="hidden md:hidden bg-white">
+      <a href="#vantagens" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">Vantagens</a>
+      <a href="#solucoes" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">Soluções</a>
+      <a href="#faq" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">FAQ</a>
+      <a href="#contato" class="block py-4 px-6 text-center bg-black text-white font-bold rounded-b-lg">Contato</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section id="inicio" class="relative h-[64vh] overflow-hidden text-white">
+      <div id="slides" class="absolute top-0 left-0 w-full h-full flex transition-transform duration-500 ease-in-out z-0">
+        <div class="w-full flex-shrink-0">
+          <img src="RECURSOS/01.png" alt="Entregador de moto VAIJÁ sorrindo, com capacete, em uma rua movimentada da cidade." class="w-full h-full object-cover" />
+        </div>
+        <div class="w-full flex-shrink-0">
+          <img src="RECURSOS/02.png" alt="Entregador em alta velocidade em sua moto, mostrando eficiência na entrega." class="w-full h-full object-cover" />
+        </div>
+        <div class="w-full flex-shrink-0">
+          <img src="RECURSOS/03.png" alt="Close de um entregador VAIJÁ ajustando o capacete, pronto para a próxima entrega." class="w-full h-full object-cover" />
+        </div>
+      </div>
+
+      <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-60 flex items-center z-10">
+        <div class="container mx-auto px-6 text-center md:text-left">
+          <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">Chega de entregas mal pagas e bloqueios injustos.</h1>
+          <p class="text-lg md:text-2xl mb-8 max-w-2xl text-gray-300">Melhores corridas, mais segurança e mais respeito em cada entrega. Ganhos claros e sem surpresa.</p>
+          <a href="ADMIN/cadastro.html" class="bg-white hover:bg-gray-200 text-black font-bold py-4 px-8 rounded-full text-lg transition duration-300">Quero fazer parte!</a>
+        </div>
+      </div>
+
+      <button id="prevBtn" class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white bg-opacity-50 text-black p-2 rounded-full hover:bg-opacity-75 transition-opacity z-20">
+        <i data-lucide="chevron-left"></i>
+      </button>
+      <button id="nextBtn" class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white bg-opacity-50 text-black p-2 rounded-full hover:bg-opacity-75 transition-opacity z-20">
+        <i data-lucide="chevron-right"></i>
+      </button>
+      <div id="dots" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20"></div>
+    </section>
+
+    <!-- VANTAGENS -->
+    <section id="vantagens" class="py-16 bg-white">
+      <div class="container mx-auto px-6 text-center">
+        <h2 class="text-3xl font-bold mb-2 text-black">Por que escolher o VAIJÁ?</h2>
+        <p class="text-gray-600 mb-12">Nossa plataforma foi pensada para todos: lojistas, entregadores e clientes.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div class="p-6 bg-gray-100 rounded-lg">
+            <i data-lucide="zap" class="mx-auto text-black mb-4" size="48"></i>
+            <h3 class="text-xl font-bold mb-2 text-black">Entregas Expressas</h3>
+            <p class="text-gray-600">Matching inteligente para encontrar o entregador mais próximo em segundos.</p>
+          </div>
+          <div class="p-6 bg-gray-100 rounded-lg">
+            <i data-lucide="dollar-sign" class="mx-auto text-black mb-4" size="48"></i>
+            <h3 class="text-xl font-bold mb-2 text-black">Taxa Fixa</h3>
+            <p class="text-gray-600">Previsibilidade total. Sem surpresas na comissão ou no valor da entrega.</p>
+          </div>
+          <div class="p-6 bg-gray-100 rounded-lg">
+            <i data-lucide="smartphone" class="mx-auto text-black mb-4" size="48"></i>
+            <h3 class="text-xl font-bold mb-2 text-black">Sem App, Sem Fricção</h3>
+            <p class="text-gray-600">Seu cliente pede e acompanha via QR Code ou WhatsApp. Simples assim.</p>
+          </div>
+          <div class="p-6 bg-gray-100 rounded-lg">
+            <i data-lucide="shield-check" class="mx-auto text-black mb-4" size="48"></i>
+            <h3 class="text-xl font-bold mb-2 text-black">Pagamento Seguro</h3>
+            <p class="text-gray-600">Validamos o perfil de cada parceiro individualmente para garantir segurança na entrega e na transação.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOLUÇÕES -->
+    <section id="solucoes" class="py-16 bg-gray-50">
+      <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-12 text-black">Uma solução completa para cada necessidade</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+            <img src="RECURSOS/lojista.jpg" alt="Lojista entregando um pacote para o motoboy VAIJÁ" class="w-full h-48 object-cover" />
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-3 text-black">Para sua Loja</h3>
+              <p class="text-gray-600 mb-4">Fidelize clientes com entregas eficientes. Os dados dos seus clientes são seus, e nosso suporte humano está disponível 24/7.</p>
+              <a href="#contato" class="text-black font-semibold hover:underline">Cadastrar minha loja →</a>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+            <img src="RECURSOS/entregador.jpg" alt="Retrato de um entregador parceiro da VAIJÁ sorrindo" class="w-full h-48 object-cover" />
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-3 text-black">Para o Entregador</h3>
+              <p class="text-gray-600 mb-4">Receba no mesmo dia (D+0) com taxa estável e transparente. Cumpra metas e ganhe cashback de parceiros.</p>
+              <a href="#contato" class="text-black font-semibold hover:underline">Quero ser parceiro →</a>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+            <img src="RECURSOS/cliente.jpg" alt="Cliente final recebendo uma entrega em casa com um sorriso" class="w-full h-48 object-cover" />
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-3 text-black">Para seu Cliente</h3>
+              <p class="text-gray-600 mb-4">Experiência premium sem instalar nada. Preço claro, rastreio em tempo real via link e segurança com PIN de entrega.</p>
+              <a href="#como-funciona" class="text-black font-semibold hover:underline">Veja como funciona →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEPOIMENTOS -->
+    <section id="depoimentos" class="py-16 bg-white">
+      <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-12 text-black">Quem usa, aprova!</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div class="bg-gray-100 p-8 rounded-lg">
+            <p class="text-gray-600 mb-4">"Desde que comecei a usar o VAIJÁ, o tempo de entrega da minha hamburgueria caiu 30%. Meus clientes estão mais felizes e eu tenho total controle do processo."</p>
+            <p class="font-bold text-black">- Joana Silva, Dona da Burger House</p>
+          </div>
+          <div class="bg-gray-100 p-8 rounded-lg">
+            <p class="text-gray-600 mb-4">"Finalmente uma plataforma que paga no mesmo dia! A taxa é justa e o sistema de quests com cashback é um baita incentivo. Recomendo pra todo motoboy."</p>
+            <p class="font-bold text-black">- Carlos Pereira, Entregador Parceiro</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-16 bg-gray-50">
+      <div class="container mx-auto px-6 max-w-3xl">
+        <h2 class="text-3xl font-bold text-center mb-12 text-black">Dúvidas Frequentes</h2>
+        <div class="space-y-4">
+          <div class="faq-item bg-white border border-gray-200 rounded-lg">
+            <button class="faq-question w-full text-left p-4 font-semibold flex justify-between items-center text-black">
+              Preciso instalar algum aplicativo?
+              <i data-lucide="chevron-down" class="transition-transform"></i>
+            </button>
+            <div class="faq-answer hidden p-4 border-t border-gray-200 text-gray-600">
+              Não! Nem você, lojista, nem seu cliente precisam instalar nada. A plataforma funciona 100% via web (PWA), acessível por QR Code ou link de WhatsApp.
+            </div>
+          </div>
+          <div class="faq-item bg-white border border-gray-200 rounded-lg">
+            <button class="faq-question w-full text-left p-4 font-semibold flex justify-between items-center text-black">
+              Como a taxa é aplicada?
+              <i data-lucide="chevron-down" class="transition-transform"></i>
+            </button>
+            <div class="faq-answer hidden p-4 border-t border-gray-200 text-gray-600">
+              Nossa taxa é fixa sobre o valor da entrega. O lojista paga o valor total e repassamos o correspondente diretamente para o entregador no mesmo dia (D+0).
+            </div>
+          </div>
+          <div class="faq-item bg-white border border-gray-200 rounded-lg">
+            <button class="faq-question w-full text-left p-4 font-semibold flex justify-between items-center text-black">
+              Como funciona a segurança com PIN?
+              <i data-lucide="chevron-down" class="transition-transform"></i>
+            </button>
+            <div class="faq-answer hidden p-4 border-t border-gray-200 text-gray-600">
+              Para garantir a segurança, o entregador só pode retirar o pedido na loja mediante um PIN único. Da mesma forma, ele só finaliza a entrega quando o cliente informa o PIN de recebimento.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section id="contato" class="py-20 bg-white">
+      <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-black mb-6">Onde nos encontrar</h2>
+            <div class="space-y-6 text-gray-700">
+              <div>
+                <h3 class="font-bold text-black text-xl flex items-center"><i data-lucide="map-pin" class="mr-2"></i> VAIJÁ GOIÂNIA</h3>
+                <p class="ml-8">Av. E, 1470 - Jardim Goiás</p>
+                <p class="ml-8">Goiânia - GO, 74810-030</p>
+                <a href="https://www.google.com/maps/place/Av.+E,+1470+-+Jardim+Goi%C3%A1s,+Goi%C3%A2nia+-+GO,+74810-030" target="_blank" class="text-black font-semibold hover:underline mt-2 inline-block ml-8">COMO CHEGAR →</a>
+              </div>
+              <div>
+                <h3 class="font-bold text-black text-xl flex items-center"><i data-lucide="mail" class="mr-2"></i> E-MAIL</h3>
+                <p class="ml-8">falevaija@gmail.com</p>
+              </div>
+              <div>
+                <h3 class="font-bold text-black text-xl flex items-center"><i data-lucide="clock" class="mr-2"></i> HORÁRIOS DE FUNCIONAMENTO</h3>
+                <p class="ml-8">Segunda a sexta, das 8h às 18h.</p>
+                <p class="ml-8">Sábado, das 8h às 12h.</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3821.579407304245!2d-49.24580062484835!3d-16.69778298849495!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935ef16773359573%3A0x462835a80597e78!2sAv.%20E%2C%201470%20-%20Jardim%20Goi%C3%A1s%20-%20GO%2C%2074810-030!5e0!3m2!1spt-BR!2sbr!4v1727216995641!5m2!1spt-BR!2sbr"
+              width="100%"
+              height="450"
+              style="border:0;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              class="rounded-lg shadow-xl border border-gray-200">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-gray-900 text-white">
+    <div class="container mx-auto px-6 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <img src="RECURSOS/logo.png" alt="Logo VAIJÁ" class="h-32 w-auto mb-4" />
+          <p class="text-gray-400">Entregas rápidas e inteligentes para negócios locais.</p>
+        </div>
+        <div>
+          <h4 class="font-bold mb-4">Navegação</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="#vantagens" class="hover:text-white">Vantagens</a></li>
+            <li><a href="#solucoes" class="hover:text-white">Soluções</a></li>
+            <li><a href="#faq" class="hover:text-white">FAQ</a></li>
+            <li><a href="#contato" class="hover:text-white">Contato</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold mb-4">Contato</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><p>falevaija@gmail.com</p></li>
+            <li><p>Goiânia - GO, Brasil</p></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold mb-4">Siga-nos</h4>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white"><i data-lucide="instagram"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white"><i data-lucide="facebook"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white"><i data-lucide="linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-500 text-sm">
+        <p>© 2025 VAIJÁ Entregas LTDA. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Ícones
+    lucide.createIcons();
+
+    // Menu mobile
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // FAQ
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+      const question = item.querySelector('.faq-question');
+      const answer = item.querySelector('.faq-answer');
+      const icon = question.querySelector('svg');
+      question.addEventListener('click', () => {
+        const isHidden = answer.classList.contains('hidden');
+        answer.classList.toggle('hidden');
+        icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+      });
+    });
+
+    // Carrossel
+    const slidesContainer = document.getElementById('slides');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const dotsContainer = document.getElementById('dots');
+
+    if (slidesContainer) {
+      const slides = slidesContainer.children;
+      const slideCount = slides.length;
+      let currentSlide = 0;
+
+      // Pontos
+      for (let i = 0; i < slideCount; i++) {
+        const dot = document.createElement('button');
+        dot.classList.add('w-3','h-3','bg-gray-400','rounded-full','transition-colors','duration-300');
+        dot.addEventListener('click', () => goToSlide(i));
+        dotsContainer.appendChild(dot);
+      }
+      const dots = dotsContainer.children;
+
+      function updateCarousel() {
+        slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+        for (let i = 0; i < dots.length; i++) {
+          dots[i].classList.toggle('bg-black', i === currentSlide);
+          dots[i].classList.toggle('bg-gray-400', i !== currentSlide);
+        }
+      }
+      function goToSlide(i){ currentSlide = i; updateCarousel(); }
+
+      nextBtn.addEventListener('click', () => { currentSlide = (currentSlide + 1) % slideCount; updateCarousel(); });
+      prevBtn.addEventListener('click', () => { currentSlide = (currentSlide - 1 + slideCount) % slideCount; updateCarousel(); });
+
+      setInterval(() => nextBtn.click(), 5000);
+      updateCarousel();
+    }
+  </script>
+</body>
+</html>

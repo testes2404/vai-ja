@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- Mantenha estas metas no topo -->
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Cadastro - VAIJÁ</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body{font-family:'Inter',sans-serif;}
+    .radio-btn-label{transition:all .3s ease-in-out;}
+    input[type="radio"]:checked + .radio-btn-label{background:#000;color:#fff;border-color:#000;}
+    #terms-modal.hidden,#photo-modal.hidden,#doc-modal.hidden{display:none;}
+    .modal-content{transition:transform .3s ease-out,opacity .3s ease-out;}
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="container mx-auto px-4 py-12 min-h-screen flex flex-col items-center justify-center">
+    <a href="../index.html" class="mb-8">
+      <img src="../RECURSOS/logo.png" alt="Logo VAIJÁ" class="h-40 w-auto">
+    </a>
+
+    <main class="w-full max-w-2xl bg-white p-8 md:p-12 rounded-2xl shadow-lg">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-4">Faça parte do nosso time</h1>
+      <p class="text-center text-gray-600 mb-8">Escolha seu tipo de cadastro e preencha os campos abaixo.</p>
+
+      <form id="signup-form" action="#" method="POST">
+        <div class="grid grid-cols-2 gap-4 mb-8">
+          <div>
+            <input type="radio" name="user_type" id="type_lojista" value="lojista" class="hidden" checked>
+            <label for="type_lojista" class="radio-btn-label cursor-pointer w-full text-center border border-gray-300 rounded-lg p-4 font-semibold h-full flex items-center justify-center">Sou Lojista</label>
+          </div>
+          <div>
+            <input type="radio" name="user_type" id="type_motorista" value="motorista" class="hidden">
+            <label for="type_motorista" class="radio-btn-label cursor-pointer w-full text-center border border-gray-300 rounded-lg p-4 font-semibold h-full flex items-center justify-center">Sou Motorista</label>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label for="full_name" class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
+            <input type="text" id="full_name" name="full_name" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="Seu nome" required>
+          </div>
+          <div>
+            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">WhatsApp</label>
+            <input type="tel" id="phone" name="phone" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="(00) 00000-0000" required>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+          <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="seu@email.com" required>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Crie uma Senha</label>
+            <input type="password" id="password" name="password" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" required>
+          </div>
+          <div>
+            <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirme sua Senha</label>
+            <input type="password" id="password_confirmation" name="password_confirmation" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" required>
+          </div>
+        </div>
+
+        <!-- Campos Lojista -->
+        <div id="lojista-fields" class="space-y-6">
+          <hr class="my-6">
+          <div>
+            <label for="store_name" class="block text-sm font-medium text-gray-700 mb-1">Nome da Loja</label>
+            <input type="text" id="store_name" name="store_name" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="O nome do seu negócio">
+          </div>
+          <div>
+            <label for="cnpj" class="block text-sm font-medium text-gray-700 mb-1">CNPJ</label>
+            <input type="text" id="cnpj" name="cnpj" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="00.000.000/0001-00">
+          </div>
+          <div>
+            <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Endereço Completo da Loja</label>
+            <input type="text" id="address" name="address" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="Rua, Número, Bairro, CEP">
+          </div>
+        </div>
+
+        <!-- Campos Motorista -->
+        <div id="motorista-fields" class="hidden space-y-6">
+          <hr class="my-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="cpf" class="block text-sm font-medium text-gray-700 mb-1">CPF</label>
+              <input type="text" id="cpf" name="cpf" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="000.000.000-00">
+            </div>
+            <div>
+              <label for="cnh" class="block text-sm font-medium text-gray-700 mb-1">Número da CNH</label>
+              <input type="text" id="cnh" name="cnh" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black">
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-1">Modelo da Moto (ou Veículo)</label>
+              <input type="text" id="vehicle_model" name="vehicle_model" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="Ex: Honda CG 160">
+            </div>
+            <div>
+              <label for="license_plate" class="block text-sm font-medium text-gray-700 mb-1">Placa</label>
+              <input type="text" id="license_plate" name="license_plate" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="ABC-1234">
+            </div>
+          </div>
+
+          <div id="doc-section" class="mt-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Verificação do Documento (CNH/RG)</label>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <button type="button" id="open-doc-front-btn" class="w-full flex items-center justify-center bg-gray-100 text-black font-bold py-3 px-4 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition">
+                  <i data-lucide="id-card" class="w-5 h-5 mr-2"></i>Adicionar/Tirar foto — Frente
+                </button>
+                <p id="doc-front-success" class="hidden mt-2 text-sm text-green-600 font-medium flex items-center justify-center">
+                  <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>Frente enviada com sucesso!
+                </p>
+              </div>
+              <div>
+                <button type="button" id="open-doc-back-btn" class="w-full flex items-center justify-center bg-gray-100 text-black font-bold py-3 px-4 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition">
+                  <i data-lucide="id-card" class="w-5 h-5 mr-2"></i>Adicionar/Tirar foto — Verso
+                </button>
+                <p id="doc-back-success" class="hidden mt-2 text-sm text-green-600 font-medium flex items-center justify-center">
+                  <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>Verso enviado com sucesso!
+                </p>
+              </div>
+            </div>
+            <div class="mt-4 text-xs text-gray-500">Se preferir, você poderá enviar arquivo no modal.</div>
+          </div>
+        </div>
+
+        <div class="mt-8">
+          <div class="flex items-center">
+            <input id="terms" name="terms" type="checkbox" class="h-4 w-4 text-black border-gray-300 rounded focus:ring-black">
+            <label for="terms" class="ml-2 block text-sm text-gray-900">Eu li e aceito os <a href="#" id="open-terms-modal" class="font-medium text-black hover:underline">Termos de Serviço</a>.</label>
+          </div>
+        </div>
+
+        <div id="photo-section" class="mt-6 hidden">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Verificação de Identidade</label>
+          <button type="button" id="open-photo-modal" class="w-full flex items-center justify-center bg-gray-100 text-black font-bold py-3 px-4 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition">
+            <i data-lucide="camera" class="w-5 h-5 mr-2"></i>Agora, tire uma foto do seu rosto
+          </button>
+          <p id="photo-success-message" class="hidden mt-2 text-sm text-green-600 font-medium flex items-center justify-center">
+            <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>Foto enviada com sucesso!
+          </p>
+        </div>
+
+        <div class="mt-8">
+          <button type="submit" id="submit-button" class="w-full bg-black text-white font-bold py-4 px-4 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
+            Finalizar Cadastro
+          </button>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <!-- Modal Termos -->
+  <div id="terms-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="close-modal-trigger absolute inset-0 bg-black bg-opacity-75"></div>
+    <div class="modal-content relative w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 transform opacity-0 scale-95">
+      <button class="close-modal-trigger absolute top-4 right-4 text-gray-400 hover:text-gray-800">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Termos e Condições de Uso</h2>
+      <div id="terms-content" class="prose max-w-none text-gray-600 max-h-[60vh] overflow-y-auto pr-4">
+        <p class="font-semibold">Data da última atualização: 30 de setembro de 2025</p>
+        <p>Bem-vindo à VAIJÁ. Estes Termos de Serviço regem o seu acesso e uso da nossa plataforma tecnológica que conecta usuários Lojistas, que buscam serviços de entrega, a usuários Motoristas, que prestam esses serviços de forma independente. Ao se cadastrar e utilizar a plataforma VAIJÁ, você concorda em cumprir e estar vinculado a estes termos na sua totalidade.</p>
+        <p>A VAIJÁ atua exclusivamente como uma intermediadora, facilitando a conexão entre as partes. Não possuímos vínculo empregatício com os Motoristas, que são parceiros autônomos e responsáveis por seus próprios veículos, equipamentos e conformidade com as leis de trânsito. Os Lojistas são inteiramente responsáveis pela qualidade, embalagem adequada e legalidade dos produtos a serem transportados.</p>
+        <p>Ao criar uma conta, você se compromete a fornecer informações precisas, completas e atualizadas. A segurança de sua senha e conta é de sua responsabilidade. As taxas de serviço da plataforma serão claramente apresentadas antes da confirmação de cada solicitação de entrega. Reservamo-nos o direito de modificar estes termos a qualquer momento, e a continuidade do uso da plataforma após tais modificações constitui sua aceitação dos novos termos. O uso indevido da plataforma pode resultar na suspensão ou encerramento da sua conta.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. …</p>
+      </div>
+      <div class="mt-6 text-right">
+        <button id="accept-terms-btn" class="close-modal-trigger bg-black text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
+          Eu li e concordo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Selfie -->
+  <div id="photo-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="close-photo-modal-trigger absolute inset-0 bg-black bg-opacity-75"></div>
+    <div class="modal-content relative w-full max-w-lg bg-white rounded-2xl shadow-xl p-8 transform opacity-0 scale-95">
+      <button class="close-photo-modal-trigger absolute top-4 right-4 text-gray-400 hover:text-gray-800"><i data-lucide="x" class="w-6 h-6"></i></button>
+      <h2 class="text-2xl font-bold text-center text-gray-900 mb-2">Verificação Facial</h2>
+      <p class="text-center text-gray-600 mb-4">Posicione seu rosto dentro da moldura e tire a foto.</p>
+
+      <div id="camera-view" class="relative w-full max-w-md mx-auto aspect-square bg-gray-900 rounded-lg overflow-hidden mb-4">
+        <video id="video-feed" class="w-full h-full object-cover" autoplay playsinline></video>
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div class="w-3/4 h-5/6 border-4 border-dashed border-white/50 rounded-[50%]"></div>
+        </div>
+      </div>
+
+      <div id="preview-view" class="hidden relative w-full max-w-md mx-auto aspect-square bg-gray-900 rounded-lg overflow-hidden mb-4">
+        <canvas id="photo-canvas" class="hidden"></canvas>
+        <img id="photo-preview" src="" alt="Sua foto" class="w-full h-full object-cover">
+      </div>
+
+      <div id="capture-controls">
+        <button id="capture-photo-btn" class="w-full bg-black text-white font-bold py-3 px-4 rounded-lg hover:bg-gray-800 transition flex items-center justify-center">
+          <i data-lucide="camera" class="w-5 h-5 mr-2"></i>Tirar Foto
+        </button>
+      </div>
+
+      <div id="confirmation-controls" class="hidden grid grid-cols-2 gap-4">
+        <button id="retake-photo-btn" class="w-full bg-gray-200 text-black font-bold py-3 px-4 rounded-lg hover:bg-gray-300 transition">Tirar Outra</button>
+        <button id="confirm-photo-btn" class="w-full bg-black text-white font-bold py-3 px-4 rounded-lg hover:bg-gray-800 transition">Confirmar Foto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Documento -->
+  <div id="doc-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="close-doc-modal-trigger absolute inset-0 bg-black bg-opacity-75"></div>
+    <div class="modal-content relative w-full max-w-lg bg-white rounded-2xl shadow-xl p-8 transform opacity-0 scale-95">
+      <button class="close-doc-modal-trigger absolute top-4 right-4 text-gray-400 hover:text-gray-800"><i data-lucide="x" class="w-6 h-6"></i></button>
+
+      <h2 id="doc-modal-title" class="text-2xl font-bold text-center text-gray-900 mb-2">Documento — Frente</h2>
+      <p class="text-center text-gray-600 mb-4">Centralize o documento no quadro, evitando reflexos.</p>
+
+      <div id="doc-camera-view" class="relative w-full max-w-md mx-auto aspect-[4/3] bg-gray-900 rounded-lg overflow-hidden mb-4">
+        <video id="doc-video-feed" class="w-full h-full object-contain" autoplay playsinline></video>
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div class="w-5/6 h-4/6 border-4 border-dashed border-white/50 rounded-xl"></div>
+        </div>
+      </div>
+
+      <div id="doc-preview-view" class="hidden relative w-full max-w-md mx-auto aspect-[4/3] bg-gray-900 rounded-lg overflow-hidden mb-4">
+        <canvas id="doc-canvas" class="hidden"></canvas>
+        <img id="doc-photo-preview" src="" alt="Documento" class="w-full h-full object-contain">
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm text-gray-600 mb-1">Ou selecione um arquivo do seu dispositivo</label>
+        <input type="file" id="doc-file-input" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-black hover:file:bg-gray-200">
+      </div>
+
+      <div id="doc-capture-controls" class="grid grid-cols-2 gap-4">
+        <button id="doc-capture-btn" class="w-full bg-black text-white font-bold py-3 px-4 rounded-lg hover:bg-gray-800 transition flex items-center justify-center">
+          <i data-lucide="camera" class="w-5 h-5 mr-2"></i>Tirar Foto
+        </button>
+        <button id="doc-retake-btn" class="w-full bg-gray-200 text-black font-bold py-3 px-4 rounded-lg hover:bg-gray-300 transition hidden">Tirar Outra</button>
+      </div>
+
+      <div class="mt-4">
+        <button id="doc-confirm-btn" class="w-full bg-black text-white font-bold py-3 px-4 rounded-lg hover:bg-gray-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP SCRIPT (Supabase + lógica de cadastro) -->
+  <script type="module">
+    // ===== Supabase Client =====
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const supabase = createClient(
+      "https://ihdezgxeqwpokheafnac.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZGV6Z3hlcXdwb2toZWFmbmFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTk0NzksImV4cCI6MjA3NDk5NTQ3OX0.lDhjyg00JMIDHRI6UYvivzmyQLs8c8lo5EAglIa8q4M"
+    );
+
+    // ===== Utils =====
+    lucide.createIcons();
+
+    // DataURL -> Blob
+    const dataURLtoBlob = (d) => {
+      if (!d) return null;
+      const [m,b64] = d.split(",");
+      const mime = (m.match(/data:(.*);base64/)||[,"image/jpeg"])[1];
+      const bin = atob(b64||""); const u8 = new Uint8Array(bin.length);
+      for (let i=0;i<bin.length;i++) u8[i]=bin.charCodeAt(i);
+      return new Blob([u8], { type: mime });
+    };
+
+    const signupForm = document.getElementById('signup-form');
+    const submitButton = document.getElementById('submit-button');
+
+    // Flags globais
+    let photoTaken = false;          // selfie
+    let docFrontTaken = false;       // documento frente
+    let docBackTaken  = false;       // documento verso
+    let selfieDataUrl = null, docFrontDataUrl = null, docBackDataUrl = null;
+
+    // Termos & seção de selfie
+    const termsCheckbox = document.getElementById('terms');
+    const photoSection = document.getElementById('photo-section');
+
+    function updateSubmitButtonState(){
+      const userType = document.querySelector('input[name="user_type"]:checked').value;
+      const requiresDocs = (userType === 'motorista');
+      const ok = termsCheckbox.checked && photoTaken && (!requiresDocs || (docFrontTaken && docBackTaken));
+      submitButton.disabled = !ok;
+    }
+
+    termsCheckbox.addEventListener('change', () => {
+      if (termsCheckbox.checked) photoSection.classList.remove('hidden');
+      else photoSection.classList.add('hidden');
+      updateSubmitButtonState();
+    });
+
+    // Alternância Lojista/Motorista
+    const userTypeRadios = document.querySelectorAll('input[name="user_type"]');
+    const lojistaFields = document.getElementById('lojista-fields');
+    const motoristaFields = document.getElementById('motorista-fields');
+
+    function toggleFields(){
+      if (document.getElementById('type_lojista').checked){
+        lojistaFields.classList.remove('hidden');
+        motoristaFields.classList.add('hidden');
+      } else {
+        lojistaFields.classList.add('hidden');
+        motoristaFields.classList.remove('hidden');
+      }
+      updateSubmitButtonState();
+    }
+    userTypeRadios.forEach(r => r.addEventListener('change', toggleFields));
+    toggleFields();
+
+    // Modal Termos (libera botão ao rolar)
+    const termsModal = document.getElementById('terms-modal');
+    const termsModalContent = termsModal.querySelector('.modal-content');
+    const openTermsLink = document.getElementById('open-terms-modal');
+    const closeTermsTriggers = document.querySelectorAll('.close-modal-trigger');
+    const termsContent = document.getElementById('terms-content');
+    const acceptTermsBtn = document.getElementById('accept-terms-btn');
+
+    function openTermsModal(){
+      termsModal.classList.remove('hidden');
+      acceptTermsBtn.disabled = true;
+      termsContent.scrollTop = 0;
+      setTimeout(()=>termsModalContent.classList.remove('opacity-0','scale-95'),10);
+    }
+    function closeTermsModal(){
+      termsModalContent.classList.add('opacity-0','scale-95');
+      setTimeout(()=>termsModal.classList.add('hidden'),300);
+    }
+    openTermsLink.addEventListener('click', e => { e.preventDefault(); openTermsModal(); });
+    closeTermsTriggers.forEach(t=>t.addEventListener('click', closeTermsModal));
+    termsContent.addEventListener('scroll', () => {
+      if (termsContent.scrollTop + termsContent.clientHeight >= termsContent.scrollHeight - 10) {
+        acceptTermsBtn.disabled = false;
+      }
+    });
+
+    // ===== Selfie (câmera) =====
+    let videoStream = null;
+    const photoModal = document.getElementById('photo-modal');
+    const photoModalContent = photoModal.querySelector('.modal-content');
+    const closePhotoModalTriggers = document.querySelectorAll('.close-photo-modal-trigger');
+    const openPhotoModalBtn = document.getElementById('open-photo-modal');
+
+    const videoFeed = document.getElementById('video-feed');
+    const photoCanvas = document.getElementById('photo-canvas');
+    const photoPreview = document.getElementById('photo-preview');
+    const cameraView = document.getElementById('camera-view');
+    const previewView = document.getElementById('preview-view');
+    const captureControls = document.getElementById('capture-controls');
+    const confirmationControls = document.getElementById('confirmation-controls');
+    const capturePhotoBtn = document.getElementById('capture-photo-btn');
+    const retakePhotoBtn = document.getElementById('retake-photo-btn');
+    const confirmPhotoBtn = document.getElementById('confirm-photo-btn');
+    const photoSuccessMessage = document.getElementById('photo-success-message');
+
+    async function openPhotoModal(){
+      photoModal.classList.remove('hidden');
+      cameraView.classList.remove('hidden');
+      previewView.classList.add('hidden');
+      captureControls.classList.remove('hidden');
+      confirmationControls.classList.add('hidden');
+      try{
+        videoStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
+        videoFeed.srcObject = videoStream;
+      }catch(err){
+        console.error("Erro câmera:", err);
+        alert("Não foi possível acessar a câmera. Verifique permissões.");
+        closePhotoModal();
+        return;
+      }
+      setTimeout(()=>photoModalContent.classList.remove('opacity-0','scale-95'),10);
+    }
+
+    function closePhotoModal(){
+      photoModalContent.classList.add('opacity-0','scale-95');
+      if (videoStream){ videoStream.getTracks().forEach(t=>t.stop()); videoStream=null; }
+      setTimeout(()=>photoModal.classList.add('hidden'),300);
+    }
+
+    openPhotoModalBtn.addEventListener('click', openPhotoModal);
+    closePhotoModalTriggers.forEach(t=>t.addEventListener('click', closePhotoModal));
+
+    capturePhotoBtn.addEventListener('click', ()=>{
+      const ctx = photoCanvas.getContext('2d');
+      photoCanvas.width = videoFeed.videoWidth;
+      photoCanvas.height = videoFeed.videoHeight;
+      ctx.drawImage(videoFeed,0,0,photoCanvas.width,photoCanvas.height);
+      const dataUrl = photoCanvas.toDataURL('image/jpeg');
+      photoPreview.src = dataUrl;
+      cameraView.classList.add('hidden');
+      previewView.classList.remove('hidden');
+      captureControls.classList.add('hidden');
+      confirmationControls.classList.remove('hidden');
+    });
+
+    retakePhotoBtn.addEventListener('click', ()=>{
+      cameraView.classList.remove('hidden');
+      previewView.classList.add('hidden');
+      captureControls.classList.remove('hidden');
+      confirmationControls.classList.add('hidden');
+    });
+
+    confirmPhotoBtn.addEventListener('click', ()=>{
+      selfieDataUrl = photoPreview.src;
+      photoTaken = true;
+      openPhotoModalBtn.classList.add('hidden');
+      photoSuccessMessage.classList.remove('hidden');
+      updateSubmitButtonState();
+      closePhotoModal();
+    });
+
+    // ===== Documento (frente/verso) =====
+    let docVideoStream = null, currentDocSide = 'frente';
+
+    const docModal = document.getElementById('doc-modal');
+    const docModalContent = docModal.querySelector('.modal-content');
+    const openDocFrontBtn = document.getElementById('open-doc-front-btn');
+    const openDocBackBtn  = document.getElementById('open-doc-back-btn');
+    const closeDocTriggers = document.querySelectorAll('.close-doc-modal-trigger');
+
+    const docModalTitle = document.getElementById('doc-modal-title');
+    const docCameraView = document.getElementById('doc-camera-view');
+    const docPreviewView = document.getElementById('doc-preview-view');
+    const docVideoFeed = document.getElementById('doc-video-feed');
+    const docCanvas = document.getElementById('doc-canvas');
+    const docPhotoPreview = document.getElementById('doc-photo-preview');
+    const docFileInput = document.getElementById('doc-file-input');
+    const docCaptureBtn = document.getElementById('doc-capture-btn');
+    const docRetakeBtn = document.getElementById('doc-retake-btn');
+    const docConfirmBtn = document.getElementById('doc-confirm-btn');
+    const docFrontSuccess = document.getElementById('doc-front-success');
+    const docBackSuccess  = document.getElementById('doc-back-success');
+
+    async function openDocModal(side){
+      currentDocSide = side;
+      docModalTitle.textContent = `Documento — ${side==='frente'?'Frente':'Verso'}`;
+      docModal.classList.remove('hidden');
+      docCameraView.classList.remove('hidden');
+      docPreviewView.classList.add('hidden');
+      docRetakeBtn.classList.add('hidden');
+      docConfirmBtn.disabled = true;
+      docFileInput.value = '';
+      try{
+        docVideoStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
+        docVideoFeed.srcObject = docVideoStream;
+      }catch(err){
+        console.warn("Sem câmera traseira; use upload.", err);
+        docCameraView.classList.add('hidden');
+        docPreviewView.classList.remove('hidden');
+      }
+      setTimeout(()=>docModalContent.classList.remove('opacity-0','scale-95'),10);
+    }
+
+    function closeDocModal(){
+      docModalContent.classList.add('opacity-0','scale-95');
+      if (docVideoStream){ docVideoStream.getTracks().forEach(t=>t.stop()); docVideoStream=null; }
+      setTimeout(()=>docModal.classList.add('hidden'),300);
+    }
+
+    openDocFrontBtn.addEventListener('click', ()=>openDocModal('frente'));
+    openDocBackBtn.addEventListener('click', ()=>openDocModal('verso'));
+    closeDocTriggers.forEach(t=>t.addEventListener('click', closeDocModal));
+
+    docCaptureBtn.addEventListener('click', ()=>{
+      if (!docVideoFeed.videoWidth) return;
+      const ctx = docCanvas.getContext('2d');
+      docCanvas.width = docVideoFeed.videoWidth;
+      docCanvas.height = docVideoFeed.videoHeight;
+      ctx.drawImage(docVideoFeed,0,0,docCanvas.width,docCanvas.height);
+      const dataUrl = docCanvas.toDataURL('image/jpeg');
+      docPhotoPreview.src = dataUrl;
+      docCameraView.classList.add('hidden');
+      docPreviewView.classList.remove('hidden');
+      docRetakeBtn.classList.remove('hidden');
+      docConfirmBtn.disabled = false;
+    });
+
+    docRetakeBtn.addEventListener('click', ()=>{
+      docPhotoPreview.src = '';
+      docFileInput.value = '';
+      docConfirmBtn.disabled = true;
+      docRetakeBtn.classList.add('hidden');
+      if (docVideoStream){
+        docCameraView.classList.remove('hidden');
+        docPreviewView.classList.add('hidden');
+      }
+    });
+
+    docFileInput.addEventListener('change', ()=>{
+      const file = docFileInput.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e=>{
+        docPhotoPreview.src = e.target.result;
+        docCameraView.classList.add('hidden');
+        docPreviewView.classList.remove('hidden');
+        docRetakeBtn.classList.remove('hidden');
+        docConfirmBtn.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    docConfirmBtn.addEventListener('click', ()=>{
+      const dataUrl = docPhotoPreview.src || null;
+      if (!dataUrl || dataUrl.startsWith('http')) return;
+      if (currentDocSide==='frente'){
+        docFrontTaken = true; docFrontDataUrl = dataUrl;
+        docFrontSuccess.classList.remove('hidden');
+        openDocFrontBtn.classList.add('hidden');
+      }else{
+        docBackTaken = true; docBackDataUrl = dataUrl;
+        docBackSuccess.classList.remove('hidden');
+        openDocBackBtn.classList.add('hidden');
+      }
+      updateSubmitButtonState();
+      closeDocModal();
+    });
+
+    // ===== Cadastro (Supabase Auth + Storage + DB) =====
+    signupForm.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      submitButton.disabled = true;
+      submitButton.textContent = 'Finalizando cadastro...';
+
+      const userType = document.querySelector('input[name="user_type"]:checked').value;
+      const fullName = document.getElementById('full_name').value;
+      const phone = document.getElementById('phone').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const passwordConfirmation = document.getElementById('password_confirmation').value;
+
+      const resetBtn = () => { submitButton.disabled = false; submitButton.textContent = 'Finalizar Cadastro'; };
+
+      if (password !== passwordConfirmation){
+        alert("As senhas não conferem!");
+        return resetBtn();
+      }
+      if (!photoTaken){
+        alert("Por favor, realize a verificação de identidade com a selfie.");
+        return resetBtn();
+      }
+      if (userType==='motorista' && (!docFrontTaken || !docBackTaken)){
+        alert("Para Motorista, é obrigatório enviar as fotos do documento (frente e verso).");
+        return resetBtn();
+      }
+
+      try{
+        // 1) Auth (cria usuário)
+        const { data: signUpData, error: signErr } = await supabase.auth.signUp({
+          email, password,
+          options: { data: { full_name: fullName, phone, user_type: userType } }
+        });
+        if (signErr) throw signErr;
+
+        // Garante sessão (necessária para RLS das policies do Storage)
+        let uid = signUpData.user?.id;
+        let session = signUpData.session;
+
+        if (!session) {
+          const { data: signInData, error: signInErr } =
+            await supabase.auth.signInWithPassword({ email, password });
+          if (signInErr) throw signInErr;
+          session = signInData.session;
+          uid = signInData.user?.id;
+        }
+        if (!uid) throw new Error("Falha ao obter UID do usuário autenticado.");
+
+        // 2) Uploads (Storage) — bucket 'user_files', path `${uid}/...`
+        const uploads = {};
+
+        submitButton.textContent = 'Enviando imagens (1/3)...';
+        if (selfieDataUrl){
+          const selfieBlob = dataURLtoBlob(selfieDataUrl);
+          const selfiePath = `${uid}/selfie.jpg`;
+          const up1 = await supabase.storage.from('user_files')
+            .upload(selfiePath, selfieBlob, { upsert:true, contentType: selfieBlob?.type || 'image/jpeg' });
+          if (up1.error) throw up1.error;
+
+          const signed1 = await supabase.storage.from('user_files').createSignedUrl(selfiePath, 60 * 60 * 24 * 7); // 7 dias
+          uploads.selfie_path = selfiePath;
+          uploads.selfie_url  = signed1.data?.signedUrl || null;
+        }
+
+        if (userType==='motorista'){
+          if (docFrontDataUrl){
+            submitButton.textContent = 'Enviando imagens (2/3)...';
+            const b = dataURLtoBlob(docFrontDataUrl);
+            const p = `${uid}/documento_frente.jpg`;
+            const up = await supabase.storage.from('user_files').upload(p, b, { upsert:true, contentType: b?.type||'image/jpeg' });
+            if (up.error) throw up.error;
+            const s = await supabase.storage.from('user_files').createSignedUrl(p, 60 * 60 * 24 * 7);
+            uploads.doc_front_path = p; uploads.doc_front_url = s.data?.signedUrl || null;
+          }
+          if (docBackDataUrl){
+            submitButton.textContent = 'Enviando imagens (3/3)...';
+            const b = dataURLtoBlob(docBackDataUrl);
+            const p = `${uid}/documento_verso.jpg`;
+            const up = await supabase.storage.from('user_files').upload(p, b, { upsert:true, contentType: b?.type||'image/jpeg' });
+            if (up.error) throw up.error;
+            const s = await supabase.storage.from('user_files').createSignedUrl(p, 60 * 60 * 24 * 7);
+            uploads.doc_back_path = p; uploads.doc_back_url = s.data?.signedUrl || null;
+          }
+        }
+
+        // 3) Salvar perfil (DB)
+        submitButton.textContent = 'Salvando dados...';
+
+        const profileData = {
+          uid, email, full_name: fullName, phone, user_type: userType,
+          created_at: new Date().toISOString(),
+          selfie_url: uploads.selfie_url ?? null,
+          doc_front_url: uploads.doc_front_url ?? null,
+          doc_back_url : uploads.doc_back_url ?? null
+        };
+
+        if (userType==='lojista'){
+          profileData.store_name = document.getElementById('store_name').value;
+          profileData.cnpj = document.getElementById('cnpj').value;
+          profileData.address = document.getElementById('address').value;
+        } else {
+          profileData.cpf = document.getElementById('cpf').value;
+          profileData.cnh = document.getElementById('cnh').value;
+          profileData.vehicle_model = document.getElementById('vehicle_model').value;
+          profileData.license_plate = document.getElementById('license_plate').value;
+        }
+
+        const { error: upsertErr } = await supabase.from('usuarios').upsert(profileData, { onConflict: 'uid' });
+        if (upsertErr) throw upsertErr;
+
+        alert("Cadastro realizado com sucesso! Você será redirecionado.");
+        window.location.href = "../index.html";
+      }catch(error){
+        console.error("Erro no cadastro (Supabase):", error);
+        let msg = "Ocorreu um erro ao realizar o cadastro. Tente novamente.";
+        if (error?.message?.includes("User already registered")) msg = "Este e-mail já está em uso. Tente outro.";
+        alert(msg);
+        resetBtn();
+      }
+    });
+
+    // Inicializa estado do botão ao carregar
+    updateSubmitButtonState();
+  </script>
+</body>
+</html>

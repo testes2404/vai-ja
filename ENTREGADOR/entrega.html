@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>VAIJÁ • Procurando entregador</title>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .pulse{animation:pulse 1.4s ease-in-out infinite}
+    @keyframes pulse{0%{opacity:.45}50%{opacity:1}100%{opacity:.45}}
+  </style>
+</head>
+<body class="bg-white text-gray-900 min-h-[100svh]">
+  <main class="max-w-lg mx-auto p-6">
+    <div class="mt-16 text-center">
+      <div class="mx-auto w-16 h-16 rounded-full border-4 border-gray-200 border-t-black animate-spin"></div>
+      <h1 class="mt-6 text-2xl font-bold">Procurando entregadores próximos…</h1>
+      <p class="mt-2 text-gray-600" id="status-sub">Isso pode levar até 2 minutos.</p>
+
+      <div id="debug" class="mt-6 text-xs text-gray-500"></div>
+
+      <div class="mt-10">
+        <button id="cancel-btn" class="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50">
+          Cancelar pedido
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const API = "http://127.0.0.1:8787"; // ajuste em produção
+    const params = new URLSearchParams(location.search);
+    const entregaId = params.get("id");
+    const sub = document.getElementById('status-sub');
+    const dbg = document.getElementById('debug');
+
+    if (!entregaId) {
+      sub.textContent = "ID da entrega não informado.";
+      throw new Error("sem id");
+    }
+
+    // polling até 120s
+    let elapsed = 0;
+    const intervalMs = 2500;
+    const maxMs = 120000;
+    const timer = setInterval(async () => {
+      elapsed += intervalMs;
+      try {
+        const r = await fetch(`${API}/status?id=${encodeURIComponent(entregaId)}`);
+        const data = await r.json();
+        if (!r.ok) throw new Error(data?.error || r.status);
+
+        dbg.textContent = `status: ${data.status} • atualizado: ${data.updated_at || '-'}`
+        if (data.status === 'aceita') {
+          clearInterval(timer);
+          sub.textContent = "Entregador encontrado!";
+          // aqui você pode redirecionar para uma tela de detalhes:
+          // location.href = `detalhes.html?id=${encodeURIComponent(entregaId)}`
+        }
+        if (elapsed >= maxMs && data.status === 'buscando') {
+          clearInterval(timer);
+          sub.textContent = "Não há entregadores por perto no momento.";
+          // Se quiser, chame uma rota que marque sem_motorista:
+          // await fetch(`${API}/cancelar`, { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({entregaId}) })
+        }
+        if (['cancelada','sem_motorista'].includes(data.status)) {
+          clearInterval(timer);
+          sub.textContent = (data.status === 'cancelada')
+            ? "Pedido cancelado."
+            : "Não há entregadores por perto no momento.";
+        }
+      } catch(e) {
+        console.warn(e);
+      }
+    }, intervalMs);
+
+    // cancelar
+    document.getElementById('cancel-btn').addEventListener('click', async ()=>{
+      try{
+        await fetch(`${API}/cancelar`, {
+          method: 'POST',
+          headers: {'content-type':'application/json'},
+          body: JSON.stringify({ entregaId })
+        });
+        sub.textContent = "Pedido cancelado.";
+        clearInterval(timer);
+      }catch(e){
+        console.warn(e);
+      }
+    });
+  </script>
+</body>
+</html>
