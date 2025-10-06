@@ -27,6 +27,9 @@
     .pay-btn.active{background:#000;color:#fff;border-color:#000}
     .pay-btn:not(.active){background:#fff;color:#111827;border-color:#e5e7eb}
     #bg-video{pointer-events:none}
+
+    /* 🔒 Cinto de segurança: se algum HTML antigo injetar o botão, esconda-o */
+    #waze-btn{display:none !important;visibility:hidden !important;pointer-events:none !important;height:0 !important;padding:0 !important;margin:0 !important;border:0 !important}
   </style>
 </head>
 <body class="bg-transparent text-gray-900 min-h-[100svh] selection:bg-black selection:text-white" style="background:transparent">
@@ -114,7 +117,6 @@
           <button id="pay-pix"  class="pay-btn active rounded-full border px-4 py-2 text-sm font-semibold">
             <i data-lucide="qr-code" class="inline w-4 h-4 mr-1"></i> PIX
           </button>
-          <!-- 🔹 Botão de teste/grátis -->
           <button id="pay-free" class="pay-btn rounded-full border px-4 py-2 text-sm font-semibold">
             <i data-lucide="badge-check" class="inline w-4 h-4 mr-1"></i> Grátis (teste)
           </button>
@@ -124,9 +126,7 @@
         </div>
       </div>
 
-      <button id="waze-btn" class="w-full mt-3 bg-cyan-500 text-white font-bold py-3 rounded-2xl shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 hover:bg-cyan-600 transition-colors hidden">
-        <i data-lucide="navigation" class="w-5 h-5"></i> Navegar com Waze
-      </button>
+      <!-- (Waze não está mais aqui no HTML) -->
 
       <button id="request-btn" class="w-full mt-3 bg-black text-white font-bold py-3 rounded-2xl shadow-lg shadow-black/10 hover:bg-gray-800 transition-colors opacity-50" disabled>
         Pedir entrega
@@ -153,13 +153,25 @@
     // ======== CONFIG API ========
     const API = "http://127.0.0.1:8787"; // ajuste em produção para sua URL do Worker
 
-    // Garantir autoplay do vídeo
+    // Garantir autoplay do vídeo e remover qualquer botão Waze remanescente
     document.addEventListener('DOMContentLoaded', () => {
       const v = document.getElementById('bg-video');
-      if (!v) return;
-      v.muted = true; v.loop = true; v.playsInline = true;
-      const tryPlay = () => v.play().catch(() => setTimeout(tryPlay, 400));
-      tryPlay();
+      if (v){ v.muted = true; v.loop = true; v.playsInline = true; v.play().catch(()=>{}); }
+
+      // 🧹 Killer do Waze: remove por id e por texto
+      const removeWaze = () => {
+        // por id
+        document.querySelectorAll('#waze-btn').forEach(el => el.remove());
+        // por texto aproximado
+        document.querySelectorAll('button,a,div').forEach(el => {
+          const t = (el.textContent || '').trim().toLowerCase();
+          if (t.includes('waze')) el.remove();
+        });
+      };
+      removeWaze();
+      // Observa mudanças dinâmicas e remove se aparecer
+      const mo = new MutationObserver(removeWaze);
+      mo.observe(document.body, { childList:true, subtree:true });
     });
 
     let map, directionsService, directionsRenderer, originLL, destLL;
@@ -222,7 +234,6 @@
     document.getElementById('request-btn').addEventListener('click', async () => {
       if (!originLL || !destLL) { alert('Defina sua localização e o destino para continuar.'); return; }
 
-      // calcula dados para o payload
       const km = ultimoLeg ? (ultimoLeg.distance?.value || 0) / 1000 : 0;
       const estimado = km * PRECO_POR_KM;
       const total = Math.max(estimado, VALOR_MINIMO);
@@ -246,7 +257,6 @@
           const data = await r.json();
           if (!r.ok || !data?.ok) throw new Error(data?.error || "Falha ao criar entrega");
 
-          // redireciona para a tela de esperando motorista
           location.href = `entregas.html?id=${encodeURIComponent(data.id)}`;
         } catch (e) {
           console.error(e);
@@ -255,7 +265,6 @@
         return;
       }
 
-      // fluxo normal de pagamento (PIX/CARTÃO)
       if (paymentMethod === 'pix')  openModal('./pagamento-pix.html','Pagamento com PIX');
       if (paymentMethod === 'card') openModal('./pagamento-cartao.html','Pagamento com Cartão');
     });
@@ -277,7 +286,7 @@
         zoom: 14,
         center: goianiaCenter,
         disableDefaultUI: true,
-        mapId: "d023c86c715bbcb19d0064b8"   // <<<<<<<<<< Map ID aplicado
+        mapId: "d023c86c715bbcb19d0064b8"
       });
       directionsRenderer.setMap(map);
 
@@ -302,15 +311,12 @@
         setDestination(place.geometry.location, place.formatted_address || place.name);
       });
 
-      // Clique no mapa define destino
       map.addListener("click", (e) => setDestination(e.latLng, null, true));
 
-      // Botão "minha localização"
       document.getElementById('btn-locate').addEventListener('click', () => {
         goToMyLocation(true);
       });
 
-      // Localização do usuário — bolinha vermelha + watch
       startUserLocationWatch(goianiaBounds);
     };
 
@@ -410,7 +416,6 @@
       const coords = document.getElementById('coords');
       coords.textContent = `(${destLL.lat.toFixed(5)}, ${destLL.lng.toFixed(5)})`;
       prec.classList.remove('hidden');
-      document.getElementById('waze-btn').classList.remove('hidden');
     }
 
     async function traceRoute() {
