@@ -223,7 +223,6 @@
       if (!originLL || !destLL) { alert('Defina sua localização e o destino para continuar.'); return; }
 
       // calcula dados para o payload
-      // distancia (km) e valor vieram do último Directions leg
       const km = ultimoLeg ? (ultimoLeg.distance?.value || 0) / 1000 : 0;
       const estimado = km * PRECO_POR_KM;
       const total = Math.max(estimado, VALOR_MINIMO);
@@ -231,7 +230,7 @@
       if (paymentMethod === 'free') {
         try {
           const payload = {
-            origem:  { lat: originLL.lat, lng: originLL.lng, endereco: null }, // se quiser, podemos fazer reverse geocode
+            origem:  { lat: originLL.lat, lng: originLL.lng, endereco: null },
             destino: { lat: destLL.lat, lng: destLL.lng, endereco: document.getElementById('destination-input').value || null },
             distancia_km: Number(km.toFixed(2)),
             valor: Number(total.toFixed(2)),
@@ -256,7 +255,7 @@
         return;
       }
 
-      // fluxo normal de pagamento (PIX/CARTÃO) → depois de aprovado, chamar /criar-entrega e redirecionar
+      // fluxo normal de pagamento (PIX/CARTÃO)
       if (paymentMethod === 'pix')  openModal('./pagamento-pix.html','Pagamento com PIX');
       if (paymentMethod === 'card') openModal('./pagamento-cartao.html','Pagamento com Cartão');
     });
@@ -277,7 +276,8 @@
       map = new Map(document.getElementById("map"), {
         zoom: 14,
         center: goianiaCenter,
-        disableDefaultUI: true
+        disableDefaultUI: true,
+        mapId: "d023c86c715bbcb19d0064b8"   // <<<<<<<<<< Map ID aplicado
       });
       directionsRenderer.setMap(map);
 
@@ -439,7 +439,7 @@
     }
   </script>
 
-  <!-- Google Maps API -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiUY7vPjFO_c7ltCI14TFe5pIcu3YSh10&v=weekly&loading=async&libraries=places,routes,marker&callback=initMap" async defer></script>
+  <!-- Google Maps API (com map_ids = seu Map ID) -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiUY7vPjFO_c7ltCI14TFe5pIcu3YSh10&v=weekly&loading=async&libraries=places,routes,marker&callback=initMap&map_ids=d023c86c715bbcb19d0064b8" async defer></script>
 </body>
 </html>
