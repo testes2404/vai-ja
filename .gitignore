@@ -6,3 +6,11 @@ dist/
 **/dist
 *.log
 .DS_Store
+node_modules/
+.wrangler/
+**/dist
+.dev.vars
+vaija-worker/.dev.vars
+*.log
+.env
+.DS_Store
