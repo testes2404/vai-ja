@@ -1,3 +1,15 @@
 {
-  "projects": { "default": "vai-ja-13aee" }
+  "projects": {
+    "default": "vai-ja-13aee"
+  },
+  "targets": {
+    "vaija-474019": {
+      "hosting": {
+        "live": [
+          "vaija-prod"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
